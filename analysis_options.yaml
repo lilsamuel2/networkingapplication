@@ -1,0 +1,15 @@
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    invalid_assignment: error
+    missing_return: error
+    dead_code: error
+    unused_local_variable: error
+    unused_import: error
+    unused_field: error
+    unnecessary_statements: error
+  exclude:
+    - "**/*.g.dart"
+    

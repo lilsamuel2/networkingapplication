@@ -1,0 +1,30 @@
+# Android Studio / IntelliJ IDEA
+.gradle
+/.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.freezed.dart
+*.g.dart
+build/
+
+# iOS
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Pods/
+
+# macOS
+*.DS_Store
+
+# Misc
+.env
+.packages
+.metadata

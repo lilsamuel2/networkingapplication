@@ -1,4 +1,10 @@
-# Networking Compass App - README
+# Networking App
+
+This app allows people to connect with other people nearby. It is built with Flutter.
+
+
+
+
 
 ## Overview
 
