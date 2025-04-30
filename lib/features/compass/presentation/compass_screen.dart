@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:networking_app/features/profile/profile_screen.dart';
 import 'package:networking_app/widgets/compass_view.dart';
 import 'package:networking_app/core/app_colors.dart';
 
@@ -14,7 +15,8 @@ import '../../../models/user_location.dart';
 
 //make the widget a stateful widget
 class CompassScreen extends StatefulWidget {
-  const CompassScreen({super.key});
+  final Function() onProfileTap;
+  const CompassScreen({super.key, required this.onProfileTap});
 
   @override
   State<CompassScreen> createState() => _CompassScreenState();
@@ -100,9 +102,7 @@ class _CompassScreenState extends State<CompassScreen> {
               isNetworkingModeOn: isNetworkingModeOn,
               nearbyUsers: _nearbyUsers, 
               onUserTap: (userId) {
-                setState(() {
-                  selectedUserId = userId;
-                });
+                widget.onProfileTap();
               },
             ),
             if (selectedUserId != null)
