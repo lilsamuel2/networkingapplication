@@ -1,23 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:networking_app/widgets/profile_preview.dart';
-import 'package:networking_app/models/user_profile.dart';
-import 'package:networking_app/models/user_location.dart';
 import 'package:networking_app/core/app_colors.dart';
+import 'package:networking_app/models/user_location.dart';
+import 'package:networking_app/models/user_profile.dart';
 import 'package:networking_app/utils/location_utils.dart';
+import 'package:networking_app/widgets/compass_user_avatar.dart';
 import 'dart:math';
 
-
+import 'package:flutter/material.dart';
 class CompassView extends StatefulWidget {
   final Map<String, UserProfile> userProfiles;
-  final bool isNetworkingModeOn ;
+  final bool isNetworkingModeOn;
   final List<UserLocation> nearbyUsers;
   final Function(UserProfile) onUserTap;
+  final GlobalKey<NavigatorState> navigatorKey;
+
   const CompassView({
     super.key,
     required this.isNetworkingModeOn,
     required this.nearbyUsers,
     required this.userProfiles,
     required this.onUserTap,
+    required this.navigatorKey,
   });
 
   @override
@@ -36,44 +38,23 @@ class _CompassViewState extends State<CompassView> with SingleTickerProviderStat
       centerLatitude: center.latitude,
       centerLongitude: center.longitude,
       targetLatitude: user.latitude,
-      targetLongitude: user.longitude,
+      targetLongitude: user.longitude, 
     );
     final userProfile = widget.userProfiles[user.id];
     if (userProfile == null){
        return const SizedBox.shrink();
     }
 
-    if (offset == null) {
+     if (offset == null) {
       return const SizedBox.shrink();
-    }
+     }
 
     return Positioned(
-      left: 100  + offset.dx,
-      top: 100 + offset.dy,
-
-      child: GestureDetector(
-        onTap: () => widget.onUserTap(userProfile),
-        child: Container(
-        width: 50,
-        height: 50,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.blue,
-              border: Border.all(
-                color: AppColors.white,
-                width: 2,
-              )),
-          child: Center(
-            child: Text(
-              userProfile.name.substring(0, 1).toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-      ),
+      left: 80 + offset.dx,
+      top: 80 + offset.dy,
+      child: CompassUserAvatar(
+        userProfile: userProfile,
+        ),
     );
   }
 
@@ -85,46 +66,32 @@ class _CompassViewState extends State<CompassView> with SingleTickerProviderStat
         transitionBuilder: (Widget child, Animation<double> animation) {
           return ScaleTransition(scale: animation, child: child);
         },
-        child: Container(
-            key: ValueKey<bool>(widget.isNetworkingModeOn),
-            width: 200,
-            height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+              key: ValueKey<bool>(widget.isNetworkingModeOn),
+              width: 200,
+              height: 200,
               decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.white,
-              ),
-              child: Stack(
-                children: [
-                  ...widget.nearbyUsers.map((user) => _buildUserDot(
-                      user,
-                      UserLocation(latitude: 0, longitude: 0, id: "center"))),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        widget.isNetworkingModeOn
-                            ? "Networking mode ON"
-                            : "Networking mode OFF",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (_showProfile)
-                   GestureDetector(
-                    onTap: (){
-                      setState(() {
-                       _showProfile = false;
-                      });
-                    },
-                    child: Center(
-                      child: ProfilePreview(),
-                    ),
+                borderRadius: BorderRadius.circular(20.0),
+                color: AppColors.lightBlue,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.black.withOpacity(0.2),
                   )
                 ],
-              )),
+              ),
+              child: Stack(children: [
+                ...widget.nearbyUsers.map((user) => _buildUserDot(user,
+                    UserLocation(latitude: 0, longitude: 0, id: "center"))),
+                Center(
+                  child: Text(
+                    widget.isNetworkingModeOn ? "Networking mode ON" : "Networking mode OFF",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: AppColors.black),
+                  ),
+                    ),
+              ])),
         ),
       ),
     );
